@@ -12,6 +12,7 @@ const Body = () => {
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
   const [searchText, setSearchText] = useState("");
   console.log(listOfRestaurant);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -35,7 +36,7 @@ const Body = () => {
   return listOfRestaurant.length === 0 ? (
     <Shimmer />
   ) : (
-    <div className="body">
+    <div className="bg-[rgb(255,255,255) shadow-sm]">
       <div className="filter flex justify-center">
         <div className="search m-4 p-4 border-solid ">
           <input
@@ -93,7 +94,7 @@ const Body = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap gap-7 justify-center my-0 m-[162.33px]">
         {filteredRestaurant.map((restaurant) => (
           <Link
             key={restaurant.info.id}

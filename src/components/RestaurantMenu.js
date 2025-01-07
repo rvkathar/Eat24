@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Shimmer from "./ShimmerUI";
 import { useParams } from "react-router-dom";
 import { MENU_API } from "../utility/constants";
+import StarIcon from "../components/StarIcon";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
   const [resInfo, setResInfo] = useState(null);
@@ -21,28 +23,56 @@ const RestaurantMenu = () => {
   };
   if (resInfo === null) return <Shimmer />;
 
-  const { name, cuisines, costForTwoMessage } =
-    resInfo?.cards[2]?.card?.card?.info;
+  const {
+    name,
+    cuisines,
+    costForTwoMessage,
+    avgRating,
+    totalRatingsString,
+    sla,
+  } = resInfo?.cards[2]?.card?.card?.info;
 
   const { itemCards } =
     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
-  console.log(itemCards);
+  //console.log(resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards);
+
+  const categories =
+    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.card?.["@type"] ==
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+  //console.log(categories);
 
   return (
-    <div>
-      <h1> {name} </h1>
-      <p>
-        {cuisines.join(",")} - {costForTwoMessage}
-      </p>
-      <h2>Menu</h2>
-      <ul>
-        {itemCards.map((item) => (
-          <li key={item.card.info.id}>
-            {item.card.info.name} -{" Rs."}
-            {item.card.info.defaultPrice / 100 || item.card.info.price / 100}
-          </li>
+    <div className=" my-[20px] m-[231.66px]">
+      <div className="ml-2 mb-2">
+        <h1 className="font-bold text-3xl font-serif "> {name} </h1>
+      </div>
+      <div className=" border border-grey-300 shadow-2xl p-4 rounded-2xl w-full h-[144.53]">
+        <div className="flex font-semibold">
+          <p className="p-1">
+            <StarIcon />
+          </p>
+          <p>{avgRating}</p>
+          <p>({totalRatingsString})</p>
+          <p className="pl-1 text-gray-500">•</p>
+          <p className="pl-2">{costForTwoMessage}</p>
+        </div>
+        <div className="pr-2 p-3 text-[#fc8019] underline text-lg">
+          {cuisines.join(",")}
+        </div>
+        <div className=" flex gap-1  lowercase font-semibold">
+          <p className="pl-1 text-gray-500">•</p>
+          {sla.slaString}
+        </div>
+      </div>
+      <div className="">
+        {/* {categories accordian} */}
+        {categories.map((category) => (
+          <RestaurantCategory data={category?.card?.card} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
