@@ -8,6 +8,8 @@ import RestaurantCategory from "./RestaurantCategory";
 const RestaurantMenu = () => {
   const [resInfo, setResInfo] = useState(null);
 
+  const [showIndex, setShowIndex] = useState(null);
+
   const { resId } = useParams();
 
   useEffect(() => {
@@ -18,7 +20,6 @@ const RestaurantMenu = () => {
     const data = await fetch(MENU_API + resId);
     const json = await data.json();
     console.log(json);
-
     setResInfo(json.data);
   };
   if (resInfo === null) return <Shimmer />;
@@ -42,7 +43,6 @@ const RestaurantMenu = () => {
         c.card?.card?.["@type"] ==
         "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
     );
-  //console.log(categories);
 
   return (
     <div className=" my-[20px] m-[231.66px]">
@@ -67,10 +67,16 @@ const RestaurantMenu = () => {
           {sla.slaString}
         </div>
       </div>
+
       <div className="">
         {/* {categories accordian} */}
-        {categories.map((category) => (
-          <RestaurantCategory data={category?.card?.card} />
+        {categories.map((category, index) => (
+          <RestaurantCategory
+            key={category?.card?.card?.title}
+            data={category?.card?.card}
+            showItems={index === showIndex ? true : false}
+            setShowIndex={() => setShowIndex(index)}
+          />
         ))}
       </div>
     </div>
